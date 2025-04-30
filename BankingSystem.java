@@ -6,15 +6,20 @@ import java.util.List;
 class Client {
     private String id;
     private String name;
-    
+
     public Client(String id, String name) {
         this.id = id;
         this.name = name;
     }
-    
-    public String getId() { return id; }
-    public String getName() { return name; }
-    
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "\nClient: " + name + " (ID: " + id + ")";
@@ -27,14 +32,17 @@ class Account {
     private Client client;
     private double balance;
     private List<Transaction> transactions = new ArrayList<>();
-    
+
     public Account(String accountNumber, Client client) {
         this.accountNumber = accountNumber;
         this.client = client;
         this.balance = 0.0;
     }
-    
+
     public void deposit(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be positive");
+        }
         balance += amount;
     }
 
@@ -45,15 +53,23 @@ class Account {
         }
         return false;
     }
-    
+
     public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
-    
-    public String getAccountNumber() { return accountNumber; }
-    public double getBalance() { return balance; }
-    public List<Transaction> getTransactions() { return transactions; }
-    
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
     @Override
     public String toString() {
         return "Account: " + accountNumber + " | Balance: $" + balance;
@@ -61,13 +77,15 @@ class Account {
 }
 
 class Transaction {
-    public enum Type { DEPOSIT, WITHDRAW }
-    
+    public enum Type {
+        DEPOSIT, WITHDRAW
+    }
+
     private Type type;
     private double amount;
     private Date date;
     private Account account;
-    
+
     public Transaction(Type type, double amount, Account account) {
         this.type = type;
         this.amount = amount;
@@ -84,9 +102,9 @@ class Transaction {
     }
 
     public Account getAccount() {
-        return account;  
+        return account;
     }
-    
+
     @Override
     public String toString() {
         return date + " | " + type + " | Amount: $" + amount + " | Account: " + account.getAccountNumber();
@@ -97,27 +115,27 @@ class Transaction {
 class Bank {
     private List<Client> clients = new ArrayList<>();
     private List<Account> accounts = new ArrayList<>();
-    
+
     public Client createClient(String id, String name) {
         Client client = new Client(id, name);
         clients.add(client);
         return client;
     }
-    
+
     public Account createAccount(String accountNumber, Client client) {
         Account account = new Account(accountNumber, client);
         accounts.add(account);
         return account;
     }
-    
+
     public void processTransaction(Transaction transaction) {
         Account account = transaction.getAccount();
-        switch(transaction.getType()) {
+        switch (transaction.getType()) {
             case DEPOSIT:
                 account.deposit(transaction.getAmount());
                 break;
             case WITHDRAW:
-                if(!account.withdraw(transaction.getAmount())) {
+                if (!account.withdraw(transaction.getAmount())) {
                     System.out.println("Error: Not enough money on balance " + account.getAccountNumber());
                     return;
                 }
@@ -130,21 +148,32 @@ class Bank {
 public class BankingSystem {
     public static void main(String[] args) {
         Bank bank = new Bank();
-        
+        /**
+         * БАНКОВСКАЯ СИСТЕМА
+         * 
+         * Задача: Реализовать консольное приложение для управления банковскими
+         * операциями.
+         * Требуется обеспечить функционал:
+         * 1. Создание клиентов и банковских счетов
+         * 2. Выполнение операций пополнения и снятия средств
+         * 3. Отслеживание истории транзакций
+         * 4. Обработку ошибок при недостатке средств
+         * 5. Вывод информации о клиентах и состоянии счетов
+         */
         // Создаем клиентов
         Client client1 = bank.createClient("C001", "Ivan Petrov");
         Client client2 = bank.createClient("C002", "Maria Ivanova");
-        
+
         // Создаем счета
         Account account1 = bank.createAccount("ACC1001", client1);
         Account account2 = bank.createAccount("ACC1002", client2);
-        
+
         // Выполняем транзакции
         bank.processTransaction(new Transaction(Transaction.Type.DEPOSIT, 1000, account1));
         bank.processTransaction(new Transaction(Transaction.Type.DEPOSIT, 1500, account2));
         bank.processTransaction(new Transaction(Transaction.Type.WITHDRAW, 300, account1));
-        bank.processTransaction(new Transaction(Transaction.Type.WITHDRAW, 2000, account2)); 
-        
+        bank.processTransaction(new Transaction(Transaction.Type.WITHDRAW, 2000, account2));
+
         // Выводим информацию
         System.out.println(client1);
         System.out.println(account1);
