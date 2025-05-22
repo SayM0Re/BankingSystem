@@ -14,7 +14,11 @@ class Account {
     }
 
     public void deposit(double amount) {
-        balance += amount;
+        if (amount <= 0) {
+            System.out.println("Error: Deposit must be positive.");
+        } else {
+            balance += amount;
+        }
     }
 
     public boolean withdraw(double amount) {
