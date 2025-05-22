@@ -20,6 +20,8 @@
     <maven.compiler.target>22</maven.compiler.target>
     <junit.version>5.9.2</junit.version>
     <mockito.version>5.3.1</mockito.version>
+    <byte.version>1.15.4</byte.version>
+    <jacoco.version>0.8.11</jacoco.version>
   </properties>
 
 <dependencies>
@@ -44,7 +46,7 @@
     <dependency>
     <groupId>net.bytebuddy</groupId>
     <artifactId>byte-buddy</artifactId>
-    <version>1.15.4</version> <!-- или новее -->
+    <version>${byte.version}</version>
     <scope>test</scope>
 </dependency>
 </dependencies>
@@ -78,32 +80,22 @@
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.8</version>
+          <version>${jacoco.version}</version>
           <executions>
-              <execution>
-                  <goals>
-                      <goal>prepare-agent</goal>
-                  </goals>
-              </execution>
-              <execution>
-                  <id>report</id>
-                  <phase>test</phase>
-                  <goals>
-                      <goal>report</goal>
-                  </goals>
-              </execution>
+            <execution>
+              <id>prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>report</id>
+              <phase>test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
           </executions>
-          <configuration>
-              <rules>
-                  <rule>
-                      <limit>
-                          <counter>LINE</counter>
-                          <value>COVEREDRATIO</value>
-                          <minimum>0.60</minimum>
-                      </limit>
-                  </rule>
-              </rules>
-          </configuration>
         </plugin>
 
       </plugins>
