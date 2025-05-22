@@ -36,10 +36,13 @@ public class BankSystem {
         bank.processTransaction(new Transaction(Transaction.Type.DEPOSIT, 1500, account2));
         bank.processTransaction(new Transaction(Transaction.Type.WITHDRAW, 300, account1));
         bank.processTransaction(new Transaction(Transaction.Type.WITHDRAW, 2000, account2));
+        bank.processTransaction(new Transaction(Transaction.Type.DEPOSIT, -100, account1));
 
         // Выводим информацию
         logger.info("{}", client1);
         logger.info("{}", account1);
+        logger.info("{}", client2);
+        logger.info("{}", account2);
         logger.info("\nOperations log:");
         account1.getTransactions().forEach(t -> logger.info(t.toString()));
     }
