@@ -46,7 +46,7 @@
     <dependency>
     <groupId>net.bytebuddy</groupId>
     <artifactId>byte-buddy</artifactId>
-    <version>${byte.version}</version> <!-- или новее -->
+    <version>${byte.version}</version>
     <scope>test</scope>
 </dependency>
 </dependencies>
