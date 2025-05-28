@@ -50,7 +50,7 @@ pipeline {
 
         stage('Check Coverage') {
             steps {
-                bat "\"%MAVEN_HOME%\\bin\\mvn\" jacoco:check"
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" clean verify"
             }
         }
 
