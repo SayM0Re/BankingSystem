@@ -14,17 +14,16 @@ pipeline {
 
         stage('Compile') {
             steps {
-                sh "${MAVEN_HOME}/bin/mvn clean compile test-compile"
+                bat 'mvn clean compile test-compile'
             }
         }
 
         stage('Test') {
             when {
-                expression { env.BRANCH_NAME.startsWith('feature/') }
+                expression { env.BRANCH_NAME?.startsWith('feature/') }
             }
             steps {
-                sh "${MAVEN_HOME}/bin/mvn test"
-                junit 'core/target/surefire-reports/*.xml'
+                bat "mvn test"
             }
         }
 
@@ -33,48 +32,42 @@ pipeline {
                 branch 'develop'
             }
             steps {
-                sh "${MAVEN_HOME}/bin/mvn checkstyle:check pmd:check spotbugs:check"
+                bat 'mvn checkstyle:check pmd:check spotbugs:check'
             }
         }
 
         stage('Coverage') {
             steps {
-                sh "${MAVEN_HOME}/bin/mvn jacoco:report"
-                publishHTML(target: [
-                    reportDir: 'core/target/site/jacoco',
-                    reportFiles: 'index.html',
-                    reportName: 'JaCoCo Coverage Report'
-                ])
+                bat 'mvn jacoco:report'
             }
         }
 
         stage('Install') {
             steps {
-                sh "${MAVEN_HOME}/bin/mvn install"
+                bat 'mvn install'
             }
         }
 
         stage('Check Coverage') {
             steps {
-                script {
-                    echo 'Проверка покрытия'
-                }
+                bat 'mvn jacoco:check'
             }
         }
 
         stage('Publish Artifact') {
             steps {
-                sh 'cp prac/app/target/*.jar prac/deploy/'
+                bat '''
+                    if not exist prac\\deploy mkdir prac\\deploy
+                    copy prac\\app\\target\\*.jar prac\\deploy\\
+                    '''
             }
         }
     }
 
     post {
-        failure {
-            echo 'Build failed!'
-        }
-        success {
-            echo 'Build succeeded!'
+        always {
+            junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+            jacoco()
         }
     }
 }
