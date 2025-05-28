@@ -12,6 +12,14 @@ pipeline {
             }
         }
 
+        stage('Debug Branch') {
+            steps {
+                echo "BRANCH_NAME = '${env.BRANCH_NAME}'"
+                echo "GIT_BRANCH = '${env.GIT_BRANCH}'"
+                echo "BRANCH = '${env.BRANCH}'"
+            }
+        }
+
         stage('Compile') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" clean compile test-compile"
@@ -20,7 +28,7 @@ pipeline {
 
         stage('Test') {
             when {
-                expression { env.BRANCH_NAME?.startsWith('origin/feature/') }
+                expression { env.GIT_BRANCH?.startsWith('origin/feature/') } 
             }
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" test"
