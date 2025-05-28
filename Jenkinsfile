@@ -57,9 +57,10 @@ pipeline {
         stage('Publish Artifact') {
             steps {
                 bat '''
-                    if not exist prac\\deploy mkdir prac\\deploy
-                    copy prac\\app\\target\\*.jar prac\\deploy\\
+                    mkdir deploy || echo
+                    copy "app\\target\\*.jar" deploy
                 '''
+                archiveArtifacts artifacts: 'deploy/*.jar', onlyIfSuccessful: true
             }
         }
     }
@@ -67,11 +68,12 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
-            publishHTML(target: [
-                reportDir: 'prac/app/target/site/jacoco',
-                reportFiles: 'index.html',
-                reportName: 'JaCoCo Coverage Report'
-            ])
+            
+            // Сохраняем отчеты JaCoCo как артефакты
+            archiveArtifacts artifacts: '**/target/site/jacoco/**', allowEmptyArchive: true
+            
+            // Сохраняем отчеты Checkstyle
+            archiveArtifacts artifacts: '**/target/checkstyle-result.xml', allowEmptyArchive: true
         }
     }
 }
