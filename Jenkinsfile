@@ -20,7 +20,7 @@ pipeline {
 
         stage('Test') {
             when {
-                expression { env.BRANCH_NAME.contains('feature/') }
+                expression { env.BRANCH_NAME?.startsWith('origin/feature/') }
             }
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" test"
