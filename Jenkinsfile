@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        MAVEN_HOME = tool 'maven'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -10,7 +14,7 @@ pipeline {
 
         stage('Compile') {
             steps {
-                bat 'mvn clean compile test-compile'
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" clean compile test-compile"
             }
         }
 
@@ -19,7 +23,7 @@ pipeline {
                 expression { env.BRANCH_NAME?.startsWith('feature/') }
             }
             steps {
-                bat 'mvn test'
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" test"
             }
         }
 
@@ -28,25 +32,25 @@ pipeline {
                 branch 'develop'
             }
             steps {
-                bat 'mvn checkstyle:check pmd:check spotbugs:check'
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" checkstyle:check pmd:check"
             }
         }
 
         stage('Coverage') {
             steps {
-                bat 'mvn jacoco:report'
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" jacoco:report"
             }
         }
 
         stage('Install') {
             steps {
-                bat 'mvn install'
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" install"
             }
         }
 
         stage('Check Coverage') {
             steps {
-                bat 'mvn jacoco:check'
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" jacoco:check"
             }
         }
 
@@ -63,7 +67,11 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
-            jacoco()
+            publishHTML(target: [
+                reportDir: 'prac/app/target/site/jacoco',
+                reportFiles: 'index.html',
+                reportName: 'JaCoCo Coverage Report'
+            ])
         }
     }
 }
