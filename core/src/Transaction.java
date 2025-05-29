@@ -1,16 +1,17 @@
 import java.util.Date;
 
-class Transaction {
+public class Transaction {
     public enum Type {
-        DEPOSIT, WITHDRAW
+        DEPOSIT,
+        WITHDRAW
     }
 
-    private Type type;
-    private double amount;
-    private Date date;
-    private Account account;
+    private final Type type;
+    private final double amount;
+    private final Date date;
+    private final Account account;
 
-    public Transaction(Type type, double amount, Account account) {
+    public Transaction(final Type type, final double amount, final Account account) {
         this.type = type;
         this.amount = amount;
         this.account = account;
@@ -30,7 +31,7 @@ class Transaction {
     }
 
     public Date getDate() {
-        return date;
+        return new Date(date.getTime());
     }
     
     @Override

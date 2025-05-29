@@ -6,28 +6,28 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('1. Git Import') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Compile') {
+        stage('2. Compile & Test') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" clean compile test-compile"
             }
         }
 
-        stage('Test') {
+        stage('3. Test for feature') {
             when {
-                expression { env.BRANCH_NAME?.startsWith('feature/') }
+                expression { env.BRANCH_NAME?.startsWith('origin/feature/') }
             }
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" test"
             }
         }
 
-        stage('Static Analysis') {
+        stage('4. Static Analysis for develop') {
             when {
                 branch 'develop'
             }
@@ -36,25 +36,25 @@ pipeline {
             }
         }
 
-        stage('Coverage') {
+        stage('5. Coverage') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" jacoco:report"
             }
         }
 
-        stage('Install') {
+        stage('6. Install Artifacts') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" install"
             }
         }
 
-        stage('Check Coverage') {
+        stage('7. Check Coverage') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" clean verify"
             }
         }
 
-        stage('Publish Artifact') {
+        stage('8. Publish Artifact') {
             steps {
                 bat '''
                     mkdir deploy || echo
