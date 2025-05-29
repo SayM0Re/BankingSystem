@@ -1,11 +1,15 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Account {
     private final String accountNumber;
     private final Client client;
     private double balance;
     private final List<Transaction> transactions = new ArrayList<>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(Account.class);
 
     public Account(final String accountNumber, final Client client) {
         this.accountNumber = accountNumber;
