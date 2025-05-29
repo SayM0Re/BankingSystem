@@ -54,7 +54,6 @@
 
   <build>
     <testSourceDirectory>${project.basedir}/prac/core/test</testSourceDirectory>
-    <pluginManagement>
       <plugins>
 
         <plugin>
@@ -77,7 +76,6 @@
                 <phase>verify</phase>
                 <goals>
                     <goal>check</goal>
-                    <goal>report</goal>
                 </goals>
               </execution>
           </executions>
@@ -139,6 +137,5 @@
         </plugin>
 
       </plugins>
-    </pluginManagement>
   </build>
 </project>
