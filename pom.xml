@@ -70,9 +70,19 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>${checkstyle.version}</version>
+          <executions>
+            <execution>
+                <id>checkstyle</id>
+                <phase>verify</phase>
+                <goals>
+                    <goal>check</goal>
+                    <goal>report</goal>
+                </goals>
+              </execution>
+          </executions>
           <configuration>
-            <configLocation>checkstyle.xml</configLocation>
-            <failOnViolation>true</failOnViolation>
+              <outputFile>${project.build.directory}/checkstyle-result.xml</outputFile>
+              <outputFileFormat>xml</outputFileFormat>
           </configuration>
         </plugin>
 
