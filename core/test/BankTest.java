@@ -35,4 +35,37 @@ class BankTest {
         bank.processTransaction(transaction);
         assertEquals(0, account.getBalance());
     }
+
+    @Test
+    void testProcessWithdrawTransaction_Success() {
+        Bank bank = new Bank();
+        Client client = bank.createClient("C300", "Test Client 3");
+        Account account = bank.createAccount("ACC300", client);
+
+        // Пополнить счет сначала
+        Transaction deposit = new Transaction(Transaction.Type.DEPOSIT, 1000.0, account);
+        bank.processTransaction(deposit);
+
+        // Снять деньги
+        Transaction withdraw = new Transaction(Transaction.Type.WITHDRAW, 500.0, account);
+        bank.processTransaction(withdraw);
+
+        assertEquals(500.0, account.getBalance());
+        assertTrue(account.getTransactions().contains(withdraw));
+    }
+
+    @Test
+    void testProcessWithdrawTransaction_Failure() {
+        Bank bank = new Bank();
+        Client client = bank.createClient("C400", "Test Client 4");
+        Account account = bank.createAccount("ACC400", client);
+
+        // Попытка снять без депозита
+        Transaction withdraw = new Transaction(Transaction.Type.WITHDRAW, 100.0, account);
+        bank.processTransaction(withdraw);
+
+        // Баланс должен остаться 0
+        assertEquals(0.0, account.getBalance());
+        assertFalse(account.getTransactions().contains(withdraw));
+    }
 }
