@@ -31,7 +31,7 @@ public class Bank {
                     break;
                 case WITHDRAW:
                     if (!account.withdraw(transaction.getAmount())) {
-                        System.out.println("Error: Not enough money on balance " + account.getAccountNumber());
+                        LOGGER.error("Error: Not enough money on balance " + account.getAccountNumber());
                         return;
                     }
                     break;

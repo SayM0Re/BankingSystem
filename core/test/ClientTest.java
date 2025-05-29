@@ -11,7 +11,7 @@ class ClientTest {
     @Test
     void testClientToString() {
         Client client = new Client("ID123", "Ivan Ivanov");
-        String expected = "\nClient: Ivan Ivanov (ID: ID123)";
+        String expected = "Client: Ivan Ivanov (ID: ID123)";
         assertEquals(expected, client.toString());
     }
 }

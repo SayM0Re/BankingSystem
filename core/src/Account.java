@@ -15,7 +15,7 @@ public class Account {
 
     public void deposit(final double amount) {
         if (amount <= 0) {
-            System.out.println("Error: Deposit must be positive.");
+            LOGGER.error("Error: Deposit must be positive.");
         } else {
             balance += amount;
         }
