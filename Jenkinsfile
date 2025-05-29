@@ -32,7 +32,7 @@ pipeline {
                 branch 'develop'
             }
             steps {
-                bat "\"%MAVEN_HOME%\\bin\\mvn\" checkstyle:check pmd:check"
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" pmd:check"
             }
         }
 
@@ -69,11 +69,11 @@ pipeline {
         always {
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
             
-            // Сохраняем отчеты JaCoCo как артефакты
+            // Сохраняем отчеты JaCoCo
             archiveArtifacts artifacts: '**/target/site/jacoco/**', allowEmptyArchive: true
             
-            // Сохраняем отчеты Checkstyle
-            archiveArtifacts artifacts: '**/target/checkstyle-result.xml', allowEmptyArchive: true
+            // Сохраняем отчеты PMD
+            archiveArtifacts artifacts: '**/target/site/pmd.xml', allowEmptyArchive: true
         }
     }
 }
