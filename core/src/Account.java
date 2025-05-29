@@ -45,6 +45,10 @@ public class Account {
         return balance;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
     public List<Transaction> getTransactions() {
         return transactions;
     }
