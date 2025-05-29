@@ -16,12 +16,13 @@
 
   <properties>
     <logback.version>1.5.18</logback.version>
-    <maven.compiler.source>22</maven.compiler.source>
-    <maven.compiler.target>22</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <junit.version>5.9.2</junit.version>
     <mockito.version>5.3.1</mockito.version>
     <byte.version>1.15.4</byte.version>
     <jacoco.version>0.8.11</jacoco.version>
+    <pmd.version>3.24.0</pmd.version>
   </properties>
 
 <dependencies>
@@ -44,16 +45,15 @@
         <scope>test</scope>
     </dependency>
     <dependency>
-    <groupId>net.bytebuddy</groupId>
-    <artifactId>byte-buddy</artifactId>
-    <version>${byte.version}</version>
-    <scope>test</scope>
-</dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>${byte.version}</version>
+        <scope>test</scope>
+    </dependency>
 </dependencies>
 
   <build>
     <testSourceDirectory>${project.basedir}/prac/core/test</testSourceDirectory>
-    <pluginManagement>
       <plugins>
 
         <plugin>
@@ -68,12 +68,16 @@
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>${checkstyle.version}</version>
-          <configuration>
-            <configLocation>checkstyle.xml</configLocation>
-            <failOnViolation>true</failOnViolation>
-          </configuration>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>${pmd.version}</version>
+          <executions>
+              <execution>
+                  <goals>
+                      <goal>check</goal>
+                      <goal>pmd</goal>
+                  </goals>
+              </execution>
+          </executions>
         </plugin>
 
         <plugin>
@@ -128,6 +132,5 @@
         </plugin>
 
       </plugins>
-    </pluginManagement>
   </build>
 </project>

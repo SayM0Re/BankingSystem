@@ -1,18 +1,23 @@
 
 public class Client {
-    private String id;
-    private String name;
+
+    private final String id;
+    private final String name;
     
-    public Client(String id, String name) {
+    public Client(final String id, final String name) {
         this.id = id;
         this.name = name;
     }
     
-    public String getId() { return id; }
-    public String getName() { return name; }
+    public String getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
     
     @Override
     public String toString() {
-        return "\nClient: " + name + " (ID: " + id + ")";
+        return "Client: " + name + " (ID: " + id + ")";
     }
 }

@@ -6,63 +6,55 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('1. Git Import') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Debug Branch') {
-            steps {
-                echo "BRANCH_NAME = '${env.BRANCH_NAME}'"
-                echo "GIT_BRANCH = '${env.GIT_BRANCH}'"
-                echo "BRANCH = '${env.BRANCH}'"
-            }
-        }
-
-        stage('Compile') {
+        stage('2. Compile & Test') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" clean compile test-compile"
             }
         }
 
-        stage('Test') {
+        stage('3. Test for feature') {
             when {
-                expression { env.GIT_BRANCH?.startsWith('origin/feature/') } 
+                expression { return env.GIT_BRANCH?.startsWith('origin/feature/') }
             }
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" test"
             }
         }
 
-        stage('Static Analysis') {
+        stage('4. Static Analysis for develop') {
             when {
                 branch 'develop'
             }
             steps {
-                bat "\"%MAVEN_HOME%\\bin\\mvn\" checkstyle:check pmd:check"
+                bat "\"%MAVEN_HOME%\\bin\\mvn\" pmd:check"
             }
         }
 
-        stage('Coverage') {
+        stage('5. Coverage') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" jacoco:report"
             }
         }
 
-        stage('Install') {
+        stage('6. Install Artifacts') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" install"
             }
         }
 
-        stage('Check Coverage') {
+        stage('7. Check Coverage') {
             steps {
                 bat "\"%MAVEN_HOME%\\bin\\mvn\" clean verify"
             }
         }
 
-        stage('Publish Artifact') {
+        stage('8. Publish Artifact') {
             steps {
                 bat '''
                     mkdir deploy || echo
@@ -77,11 +69,11 @@ pipeline {
         always {
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
             
-            // Сохраняем отчеты JaCoCo как артефакты
+            // Сохраняем отчеты JaCoCo
             archiveArtifacts artifacts: '**/target/site/jacoco/**', allowEmptyArchive: true
             
-            // Сохраняем отчеты Checkstyle
-            archiveArtifacts artifacts: '**/target/checkstyle-result.xml', allowEmptyArchive: true
+            // Сохраняем отчеты PMD
+            archiveArtifacts artifacts: '**/target/site/pmd.xml', allowEmptyArchive: true
         }
     }
 }
